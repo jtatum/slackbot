@@ -52,7 +52,7 @@ class MessageDispatcher(object):
             if func:
                 responded = True
                 try:
-                    func(Message(self._client, msg), *args)
+                    func(Message(self._client, self._plugins, msg), *args)
                 except:
                     logger.exception(
                         'failed to handle message %s with plugin "%s"',
@@ -162,11 +162,13 @@ class MessageDispatcher(object):
             default_reply += [
                 u'    • `{0}` {1}'.format(p.pattern, v.__doc__ or "")
                 for p, v in
-                six.iteritems(self._plugins.commands['respond_to'])]
+                six.iteritems(self._plugins.commands['respond_to'])
+                if not hasattr(v, 'slackbot_hide_in_default_reply')
+            ]
             # pylint: disable=redefined-variable-type
             default_reply = u'\n'.join(default_reply)
 
-        m = Message(self._client, msg)
+        m = Message(self._client, self._plugins, msg)
         m.reply(default_reply)
 
 
@@ -186,10 +188,10 @@ def unicode_compact(func):
 
 
 class Message(object):
-    def __init__(self, slackclient, body):
+    def __init__(self, slackclient, plugins, body):
         self._client = slackclient
         self._body = body
-        self._plugins = PluginsManager()
+        self._plugins = plugins
 
     def _get_user_id(self):
         if 'user' in self._body:

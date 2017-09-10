@@ -38,8 +38,9 @@ class FakeClient:
 
 
 class FakeMessage:
-    def __init__(self, client, msg):
+    def __init__(self, client, plugins, msg):
         self._client = client
+        self._plugins = plugins
         self._msg = msg
 
     def reply(self, message):

@@ -7,7 +7,8 @@ install_requires = (
     'requests>=2.4.0',
     'websocket-client>=0.22.0',
     'slacker>=0.9.50',
-    'six>=1.10.0'
+    'six>=1.10.0',
+    'typing>=3.6.2'
 ) # yapf: disable
 
 excludes = (
